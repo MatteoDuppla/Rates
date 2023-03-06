@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/MatteoDuppla/Rates#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "method-override": "^3.0.0"
   }
 }
