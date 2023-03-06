@@ -25,8 +25,14 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/view');
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.get("/", (req,res)=>{
-    res.send("hola mundo");
+const usersRoutes = require('./routes/userRouter');
+const ratesRoutes = require('./routes/rateRouter');
+
+app.use('/users', usersRoutes);
+app.use('/rates', ratesRoutes);
+
+app.get('*', (req, res) => {
+    res.redirect('/users/login')
 })
 
 app.listen(PORT, function () { console.log(`Servidor corriendo en el puerto ${PORT}`) });
