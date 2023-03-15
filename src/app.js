@@ -31,6 +31,33 @@ const ratesRoutes = require('./routes/rateRouter');
 app.use('/users', usersRoutes);
 app.use('/rates', ratesRoutes);
 
+
+
+app.get('/crearcarpetadrive', (req, res) => {
+    const name = req.query.name;
+    const parentUrl = req.query.parent_url;
+
+    if (!name || !parentUrl) {
+        return res.status(400).send('Faltan parámetros en la solicitud');
+    }
+    
+    const data = {
+        name: name,
+        parent_url: parentUrl
+      };
+      
+      fetch(process.env.DRIVE_URL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => res.send('Carpeta creada en Google Drive'))
+        .catch(error => res.sendStatus(400));
+  });
+
 app.get('*', (req, res) => {
     res.redirect('/users/login')
 })
