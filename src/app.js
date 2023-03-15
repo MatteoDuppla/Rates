@@ -31,32 +31,57 @@ const ratesRoutes = require('./routes/rateRouter');
 app.use('/users', usersRoutes);
 app.use('/rates', ratesRoutes);
 
+async function crearCarpeta(data) {
+    try {
+      const response = await fetch(process.env.DRIVE_URL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
 
 
-app.get('/crearcarpetadrive', (req, res) => {
+  app.get('/crearcarpetadrive', async (req, res) => {
     const name = req.query.name;
     const parentUrl = req.query.parent_url;
 
     if (!name || !parentUrl) {
         return res.status(400).send('Faltan parámetros en la solicitud');
     }
-    
-    const data = {
-        name: name,
-        parent_url: parentUrl
-      };
-      
-      fetch(process.env.DRIVE_URL, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
+
+    try {
+        const folderResponse = await crearCarpeta({ name, parent_url: parentUrl });
+        const folders = [
+            {
+                name: 'CONTABILIDAD',
+                parent_url: folderResponse,
+            },
+            {
+                name: 'COMERCIAL',
+                parent_url: folderResponse,
+            },
+            {
+                name: 'LEGAL',
+                parent_url: folderResponse,
+            },
+        ];
+        for (let folder of folders) {
+            const folderResponse = await crearCarpeta(folder);
+            console.log('Respuesta:', folderResponse);
         }
-      })
-        .then(response => response.json())
-        .then(data => res.send('Carpeta creada en Google Drive'))
-        .catch(error => res.sendStatus(400));
-  });
+        console.log('Respuesta:', folderResponse);
+        res.send('Carpeta creada en Google Drive');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(400).send(error.message);
+    }
+});
 
 app.get('*', (req, res) => {
     res.redirect('/users/login')
