@@ -83,6 +83,10 @@ async function crearCarpeta(data) {
     }
 });
 
+
+
+
+
 app.get('*', (req, res) => {
     res.redirect('/users/login')
 })
