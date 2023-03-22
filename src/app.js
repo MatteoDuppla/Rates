@@ -6,6 +6,7 @@ const cors = require('cors');
 const session = require("express-session");
 const cookies = require('cookie-parser');
 require('dotenv').config();
+const jsforce = require('jsforce');
 
 const app = express();
 
@@ -50,6 +51,7 @@ async function crearCarpeta(data) {
   app.get('/crearcarpetadrive', async (req, res) => {
     const name = req.query.name;
     const parentUrl = req.query.parent_url;
+    const id =  req.query.id;
 
     if (!name || !parentUrl) {
         return res.status(400).send('Faltan parámetros en la solicitud');
@@ -57,6 +59,22 @@ async function crearCarpeta(data) {
 
     try {
         const folderResponse = await crearCarpeta({ name, parent_url: parentUrl });
+        const jsforce = require("jsforce");const conn = new jsforce.Connection({
+            // you can change loginUrl to connect to sandbox or prerelease env.
+            // loginUrl : "https://test.salesforce.com"
+        });
+
+        conn.login(process.env.USER, process.env.PASSWORD + process.env.SECURITY_TOKEN, (err, userInfo) => {
+            if (err) { return console.error(err); }
+          
+            // update the Carpeta_Drive_URL__c field of an opportunity record
+            const fields = { Carpeta_Drive_URL__c: folderResponse };
+            conn.sobject('Opportunity').update({ Id: id, ...fields }, (err, result) => {
+              if (err) { return console.error(err); }
+              console.log(result);
+            });
+        });
+        
         const folders = [
             {
                 name: 'CONTABILIDAD',
