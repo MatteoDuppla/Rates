@@ -20,10 +20,10 @@ const controller = {
                 value: parseFloat(req.body.value),
                 creation_date: date_ob.toString(),
                 user_id: ssn.user_id,
-                type:'Duppla'
+                type:'Duppla test'
             })
                 .then(() => {
-                    slack.alert('La nueva tasa de duppla es '+req.body.value);
+                    slack.alert('La nueva tasa test de duppla es '+req.body.value);
                     res.redirect('/rates/home');
                 })
                 .catch(error => res.send(error))
@@ -38,10 +38,10 @@ const controller = {
                 value: parseFloat(req.body.value),
                 creation_date: date_ob.toString(),
                 user_id: ssn.user_id,
-                type:'Banco'
+                type:'Banco test'
             })
                 .then(() => {
-                    slack.alert('La nueva tasa del banco es '+req.body.value);
+                    slack.alert('La nueva tasa test del banco es '+req.body.value);
                     res.redirect('/rates/home');
                 })
                 .catch(error => res.send(error))
@@ -49,7 +49,7 @@ const controller = {
     },
 
     getRate: function (req, res) {
-        db.sequelize.query("select * from rates where type='Duppla' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
+        db.sequelize.query("select * from rates where type='Duppla test' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
         .then(function(rate){
             res.send(JSON.stringify(rate[0]))
           }); 
@@ -62,7 +62,7 @@ const controller = {
           }); */
     }, 
     getBankRate: function (req, res) {
-        db.sequelize.query("select * from rates where type='Banco' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
+        db.sequelize.query("select * from rates where type='Banco test' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
         .then(function(rate){
             res.send(JSON.stringify(rate[0]))
           }); 
@@ -84,9 +84,9 @@ const controller = {
         res.send('OK')
     },
     home: (req, res) => {
-        db.sequelize.query("select * from rates where type='Duppla' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
+        db.sequelize.query("select * from rates where type='Duppla test' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
         .then(function(rate){
-            db.sequelize.query("select * from rates where type='Banco' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
+            db.sequelize.query("select * from rates where type='Banco test' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
             .then(function(bank){
                 r = rate[0]
                 b = bank[0]
