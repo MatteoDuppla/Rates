@@ -88,8 +88,8 @@ const controller = {
         .then(function(rate){
             db.sequelize.query("select * from rates where type='Banco test' order by creation_date desc limit 1", { type: QueryTypes.SELECT })
             .then(function(bank){
-                r = rate[0]
-                b = bank[0]
+                r = (rate[0] ? rate[0] : 0)
+                b = (bank[0] ? bank[0] : 0)
                 res.render('../view/home',{r,b})
             });
         });
